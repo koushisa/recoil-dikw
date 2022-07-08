@@ -3,4 +3,5 @@ Created with CodeSandbox
 https://codesandbox.io/s/github/koushisa/recoil-dikw/tree/main/
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/31304738/177928515-ca96d4fc-bd55-4c33-904c-70f0f01ea015.png" width="320">
+  <img src="https://user-images.githubusercontent.com/31304738/177928841-51c0ff25-f6aa-49d3-9ed2-d0afb2508bfe.png" width="320">
+</p>
