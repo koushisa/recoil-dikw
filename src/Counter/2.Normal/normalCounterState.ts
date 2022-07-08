@@ -14,7 +14,6 @@ const multiplied = selector({
 });
 
 // カスタムフックのみを公開する
-// 意図せぬ使われ方はされない
 export const useCounter = () => {
   return {
     counter: useRecoilValue(counter),
