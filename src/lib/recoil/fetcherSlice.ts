@@ -32,11 +32,6 @@ const fetcher = <T>(url: RequestInfo, init?: RequestInit): Promise<T> => {
 export function fetcherSlice<T>(args: Args) {
   const { url, requestInit, disabled, key = nanoid } = args;
 
-  const refreshId = atom({
-    key: `${key}/refreshId`,
-    default: 0
-  });
-
   const delegatedUrl = atom({
     key: `${key}/delegatedUrl`,
     default: selector({
@@ -61,13 +56,23 @@ export function fetcherSlice<T>(args: Args) {
     }
   });
 
+  const refreshId = atom({
+    key: `${key}/refreshId`,
+    default: 0
+  });
+
+  const loading = atom({
+    key: `${key}/loading`,
+    default: false
+  });
+
   const response = selector<T>({
     key: `${key}/response`,
     get: ({ get }) => {
       // for refresh query
       get(refreshId);
 
-      if (get(delegatedDisabled)) {
+      if (get(loading) || get(delegatedDisabled)) {
         return RecoilLoadable.loading();
       }
 
@@ -85,6 +90,7 @@ export function fetcherSlice<T>(args: Args) {
 
   return {
     reader: loadableAtomReader({
+      loading,
       response
     }),
 
@@ -95,6 +101,10 @@ export function fetcherSlice<T>(args: Args) {
 
       refetch: ({ reset }) => () => {
         reset(response);
+      },
+
+      toggleLoading: ({ set }) => () => {
+        set(loading, (prev) => !prev);
       }
     })
   };
