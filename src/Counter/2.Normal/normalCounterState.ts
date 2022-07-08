@@ -1,6 +1,8 @@
 import { atom, selector, useRecoilCallback, useRecoilValue } from "recoil";
 
-// atomは非公開
+
+// データ or 情報にあたるAtom, Selectorは非公開にする
+
 const counter = atom({
   key: "normalCounterState",
   default: 0
@@ -13,7 +15,7 @@ const multiplied = selector({
   }
 });
 
-// カスタムフックのみを公開する
+// 知識となるカスタムフックのみを公開する
 export const useCounter = () => {
   return {
     counter: useRecoilValue(counter),
