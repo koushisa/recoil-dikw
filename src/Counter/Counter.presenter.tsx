@@ -1,23 +1,23 @@
-type Props = {
+type CounterPresenterProps = {
   counter: number;
   multiplied: number;
-  increment: () => void;
-  incrementAsync: () => void;
+  onClickPlus: () => void;
+  onClickPlusAsync: () => void;
 };
 
-export const CounterPresenter: React.FC<Props> = ({
+export const CounterPresenter: React.FC<CounterPresenterProps> = ({
   counter,
   multiplied,
-  increment,
-  incrementAsync
+  onClickPlus,
+  onClickPlusAsync
 }) => {
   return (
     <>
       <p>{counter}</p>
       <p>multiplied: {multiplied}</p>
 
-      <button onClick={increment}>+</button>
-      <button onClick={incrementAsync}>incrementAsync</button>
+      <button onClick={onClickPlus}>+</button>
+      <button onClick={onClickPlusAsync}>+ Async</button>
     </>
   );
 };

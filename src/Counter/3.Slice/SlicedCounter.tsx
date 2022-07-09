@@ -7,12 +7,18 @@ export const SlicedCounter: React.FC = () => {
   const { counter, multiplied } = useCounter();
   const { increment, incrementAsync } = useUpdateCounter();
 
+  const handleClickPlus = () => {
+    increment();
+
+    console.log("thanks.");
+  };
+
   return (
     <CounterPresenter
       counter={counter}
       multiplied={multiplied}
-      increment={increment}
-      incrementAsync={incrementAsync}
+      onClickPlus={handleClickPlus}
+      onClickPlusAsync={incrementAsync}
     />
   );
 };

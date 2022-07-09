@@ -29,8 +29,8 @@ export const BadCounter: React.FC = () => {
     <CounterPresenter
       counter={counter}
       multiplied={multiplied}
-      increment={increment}
-      incrementAsync={incrementAsync}
+      onClickPlus={increment}
+      onClickPlusAsync={incrementAsync}
     />
   );
 };
