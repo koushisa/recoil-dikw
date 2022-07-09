@@ -5,7 +5,8 @@ import {
   RecoilValueReadOnly,
   selector,
   UnwrapRecoilValue,
-  useRecoilValue
+  useRecoilValue,
+  useRecoilValueLoadable
 } from "recoil";
 import { nanoid } from "../nanoid";
 
@@ -17,7 +18,7 @@ type ResultSelector<Obj extends Input> = RecoilValueReadOnly<
   }
 >;
 
-export type AtomReaderReturn<Obj extends Input> = [
+type AtomReaderReturn<Obj extends Input> = [
   ResultSelector<Obj>,
   () => UnwrapRecoilValue<ResultSelector<Obj>>
 ];
@@ -45,4 +46,16 @@ export function atomReader<Obj extends Input>(
 
   // FIXME: type cast
   return ([result, hooks] as unknown) as any;
+}
+
+export function loadableAtomReader<Obj extends Input>(
+  input: Obj,
+  key = nanoid()
+) {
+  const [result] = atomReader(input, key);
+
+  // with Loadable
+  const hooks = () => useRecoilValueLoadable(result);
+
+  return [result, hooks] as const;
 }

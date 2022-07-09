@@ -11,7 +11,7 @@ import { nanoid } from "../nanoid";
 
 type AnyFunc = (...args: ReadonlyArray<any>) => void;
 
-export type AtomCallbackInput<Func = AnyFunc> = Record<
+type AtomCallbackInput<Func = AnyFunc> = Record<
   string,
   (cb: CallbackInterface) => Func
 >;
@@ -22,7 +22,7 @@ type ResultSelector<Obj extends AtomCallbackInput> = RecoilValueReadOnly<
   }
 >;
 
-export type AtomCallbackReturn<Obj extends AtomCallbackInput> = [
+type AtomCallbackReturn<Obj extends AtomCallbackInput> = [
   ResultSelector<Obj>,
   () => UnwrapRecoilValue<ResultSelector<Obj>>
 ];

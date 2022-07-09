@@ -7,7 +7,7 @@ import {
 } from "recoil";
 import { nanoid } from "../../lib/nanoid";
 import { atomCallback } from "./atomCallback";
-import { loadableAtomReader } from "./loadableAtomReader";
+import { loadableAtomReader } from "./atomReader";
 
 type Args = {
   url: (
