@@ -13,8 +13,8 @@ type FetchResponse = {
 
 // データフェッチのスライス
 export const {
-  reader: [, useCounterQuery],
-  updater: [, useCounterQueryMutation]
+  reader: [counterQueryReader, useCounterQuery],
+  updater: [counterQueryMutation, useCounterQueryMutation]
 } = fetcherSlice<FetchResponse>({
   url: ({ get }) => {
     const currentCounter = get(counterState).counter;
