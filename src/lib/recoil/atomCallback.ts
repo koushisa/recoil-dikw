@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import {
-  CallbackInterface,
+  CallbackInterface as RecoilCallbackInterface,
   RecoilValueReadOnly,
   selector,
+  TransactionInterface_UNSTABLE as RecoilTransactionInterface,
   UnwrapRecoilValue,
   useRecoilValue
 } from "recoil";
@@ -11,26 +12,26 @@ import { nanoid } from "../nanoid";
 
 type AnyFunc = (...args: ReadonlyArray<any>) => void;
 
-type AtomCallbackInput<Func = AnyFunc> = Record<
+type CallbackInput<Callback, Func = AnyFunc> = Record<
   string,
-  (cb: CallbackInterface) => Func
+  (cb: Callback) => Func
 >;
 
-type ResultSelector<Obj extends AtomCallbackInput> = RecoilValueReadOnly<
+type ResultSelector<Input extends CallbackInput<any>> = RecoilValueReadOnly<
   {
-    [P in keyof Obj]: ReturnType<Obj[P]>;
+    [P in keyof Input]: ReturnType<Input[P]>;
   }
 >;
 
-type AtomCallbackReturn<Obj extends AtomCallbackInput> = [
-  ResultSelector<Obj>,
-  () => UnwrapRecoilValue<ResultSelector<Obj>>
+type CallbackReturn<Input extends CallbackInput<any>> = [
+  ResultSelector<Input>,
+  () => UnwrapRecoilValue<ResultSelector<Input>>
 ];
 
-export function atomCallback<Obj extends AtomCallbackInput>(
-  input: Obj,
-  key = nanoid()
-): AtomCallbackReturn<Obj> {
+// Recoil Callback shorthand
+export function atomCallback<
+  Input extends CallbackInput<RecoilCallbackInterface>
+>(input: Input, key = nanoid()): CallbackReturn<Input> {
   const fields = Object.keys(input);
 
   const result = selector({
@@ -49,6 +50,39 @@ export function atomCallback<Obj extends AtomCallbackInput>(
       });
 
       return callbacks;
+    }
+  });
+
+  const hooks = () => useRecoilValue(result);
+
+  // FIXME: type cast
+  return ([result, hooks] as unknown) as any;
+}
+
+// Recoil Transaction shorthand
+export function atomTransaction<
+  Input extends CallbackInput<RecoilTransactionInterface>
+>(input: Input, key = nanoid()): CallbackReturn<Input> {
+  const fields = Object.keys(input);
+
+  const result = selector({
+    key,
+    get({ getCallback }) {
+      return fields.map((key) => {
+        const transaction = getCallback(
+          (cb) => (...args: ReadonlyArray<any>) => {
+            cb.transact_UNSTABLE((transactionOpts) => {
+              const appliedFunc = input[key];
+
+              appliedFunc(transactionOpts)(args);
+            });
+          }
+        );
+
+        return {
+          [key]: transaction
+        };
+      });
     }
   });
 
